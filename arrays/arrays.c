@@ -7,7 +7,7 @@ typedef struct Array
 {
     int capacity;    // How many elements can this array hold?
     int count;       // How many states does the array currently hold?
-    char **elements; // The string elements contained in the array
+    char **elements; // The string elements contained in the array (it's an array of strings!)
 } Array;
 
 /************************************
@@ -29,7 +29,7 @@ Array *create_array(int capacity)
     newArr->count = 0;
 
     // Allocate memory for elements
-    newArr->elements = malloc(capacity * sizeof(char));
+    newArr->elements = malloc(capacity * sizeof(newArr->elements));
 
     return newArr;
 }
@@ -79,8 +79,16 @@ char *arr_read(Array *arr, int index)
 {
 
     // Throw an error if the index is greater or equal to than the current count
-
-    // Otherwise, return the element at the given index
+    if (index > arr->count)
+    {
+        fprintf(stderr, "Index %i out of range\n", index);
+        return -1;
+    }
+    else
+    {
+        // Otherwise, return the element at the given index
+        return arr->elements[index];
+    }
 }
 
 /*****
