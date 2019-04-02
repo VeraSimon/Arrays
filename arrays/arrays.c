@@ -29,7 +29,7 @@ Array *create_array(int capacity)
     newArr->count = 0;
 
     // Allocate memory for elements
-    newArr->elements = malloc(capacity * sizeof(newArr->elements));
+    newArr->elements = malloc(capacity * sizeof(char *));
 
     return newArr;
 }
@@ -41,6 +41,11 @@ void destroy_array(Array *arr)
 {
 
     // Free all elements
+    // Assumes strings were malloc'ed, such as with `strdup` used in arr_append
+    for (int i = 0; i < arr->count; i++)
+    {
+        free(arr->elements[i]);
+    }
     // Only one of the elements is a pointer to something we manually allocated memory for, so here it is
     free(arr->elements);
 
@@ -79,10 +84,10 @@ char *arr_read(Array *arr, int index)
 {
 
     // Throw an error if the index is greater or equal to than the current count
-    if (index > arr->count)
+    if (index >= arr->count)
     {
         fprintf(stderr, "Index %i out of range\n", index);
-        return -1;
+        return NULL;
     }
     else
     {
@@ -120,11 +125,12 @@ void arr_append(Array *arr, char *element)
     {
         // TODO: Implement resize_array, then update this to resize the array.
         fprintf(stderr, "Can't add element %s. Array is full.\n", element);
-        return -1;
+        return;
     }
 
     // Copy the element and add it to the end of the array
-    arr->elements[arr->count] = element;
+    char *elementCopy = strdup(element);
+    arr->elements[arr->count] = elementCopy;
 
     // Increment count by 1
     arr->count++;
