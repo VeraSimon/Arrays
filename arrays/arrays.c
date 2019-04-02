@@ -93,7 +93,8 @@ char *arr_read(Array *arr, int index)
     // Throw an error if the index is greater or equal to than the current count
     if (index >= arr->count)
     {
-        fprintf(stderr, "Index %i out of range\n", index);
+        fprintf(stderr, "Read at index %i out of range\n", index);
+        // NULL / 0 / '\0' is an allowable pointer address ^_^
         return NULL;
     }
     else
@@ -109,15 +110,31 @@ char *arr_read(Array *arr, int index)
 void arr_insert(Array *arr, char *element, int index)
 {
 
-    // Throw an error if the index is greater than the current count
+    // Throw an error if the index is greater than (or equal to) the current count
+    if (index >= arr->count)
+    {
+        fprintf(stderr, "Insert at index %i out of range\n", index);
+        return;
+    }
 
     // Resize the array if the number of elements is over capacity
+    if (arr->count >= arr->capacity)
+    {
+        resize_array(arr);
+    }
 
     // Move every element after the insert index to the right one position
+    for (int i = arr->count; i > index; i--)
+    {
+        arr->elements[i] = arr->elements[i - 1];
+    }
 
     // Copy the element and add it to the array
+    char *elementCopy = strdup(element);
+    arr->elements[index] = elementCopy;
 
     // Increment count by 1
+    arr->count++;
 }
 
 /*****
@@ -136,6 +153,7 @@ void arr_append(Array *arr, char *element)
     }
 
     // Copy the element and add it to the end of the array
+    // strdup uses malloc under the hood, so remember to free it after
     char *elementCopy = strdup(element);
     arr->elements[arr->count] = elementCopy;
 
