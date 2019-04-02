@@ -116,10 +116,18 @@ void arr_append(Array *arr, char *element)
 
     // Resize the array if the number of elements is over capacity
     // or throw an error if resize isn't implemented yet.
+    if (arr->count >= arr->capacity)
+    {
+        // TODO: Implement resize_array, then update this to resize the array.
+        fprintf(stderr, "Can't add element %s. Array is full.\n", element);
+        return -1;
+    }
 
     // Copy the element and add it to the end of the array
+    arr->elements[arr->count] = element;
 
     // Increment count by 1
+    arr->count++;
 }
 
 /*****
