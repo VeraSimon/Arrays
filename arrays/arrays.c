@@ -7,7 +7,7 @@ typedef struct Array
 {
     int capacity;    // How many elements can this array hold?
     int count;       // How many states does the array currently hold?
-    char **elements; // The string elements contained in the array (it's an array of strings!)
+    char **elements; // The string elements contained in the array (it's an array of string pointers!)
 } Array;
 
 /************************************
@@ -46,10 +46,10 @@ void destroy_array(Array *arr)
     {
         free(arr->elements[i]);
     }
-    // Only one of the elements is a pointer to something we manually allocated memory for, so here it is
+
     free(arr->elements);
 
-    // Free array
+    // Free Array struct
     free(arr);
 }
 
@@ -59,14 +59,21 @@ void destroy_array(Array *arr)
  *****/
 void resize_array(Array *arr)
 {
-
     // Create a new element storage with double capacity
+    char **newElementArr = malloc(2 * sizeof(arr));
 
     // Copy elements into the new storage
+    for (int i = 0; i < arr->count; i++)
+    {
+        newElementArr[i] = arr->elements[i];
+    }
 
     // Free the old elements array (but NOT the strings they point to)
+    free(arr->elements);
 
     // Update the elements and capacity to new values
+    arr->capacity *= 2;
+    arr->elements = newElementArr;
 }
 
 /************************************
@@ -123,9 +130,9 @@ void arr_append(Array *arr, char *element)
     // or throw an error if resize isn't implemented yet.
     if (arr->count >= arr->capacity)
     {
-        // TODO: Implement resize_array, then update this to resize the array.
-        fprintf(stderr, "Can't add element %s. Array is full.\n", element);
-        return;
+        resize_array(arr);
+        // fprintf(stderr, "Can't add element %s. Array is full.\n", element);
+        // return;
     }
 
     // Copy the element and add it to the end of the array
