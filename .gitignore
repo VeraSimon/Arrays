@@ -6,3 +6,7 @@ build
 *.log
 
 */arrays
+
+*.exe
+*.stackdump
+.vscode
