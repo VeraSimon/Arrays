@@ -27,15 +27,24 @@ char *day_1_array_tests()
     return NULL;
 }
 
-
 char *day_2_array_tests()
 {
+    // arr->elements == [NULL]
+    // arr->capacity == 1
+    // arr->count == 0
     Array *arr = create_array(1);
 
+    // arr->elements == [0x000100]
+    // 0x000100 == "VALUE-1"
+    // arr->count == 1
     arr_insert(arr, "VALUE-1", 0);
 
     mu_assert(strcmp(arr_read(arr, 0), "VALUE-1") == 0, "Insert value failed");
 
+    // arr->elements == [0x000101, 0x000100]
+    // 0x000101 == "VALUE-2"
+    // arr->capacity == 2
+    // arr->count == 2
     arr_insert(arr, "VALUE-2", 0);
 
     mu_assert(arr->capacity == 2, "Resize array on insert failed");
@@ -44,6 +53,10 @@ char *day_2_array_tests()
     mu_assert(strcmp(arr_read(arr, 0), "VALUE-2") == 0, "Insert value failed");
     mu_assert(strcmp(arr_read(arr, 1), "VALUE-1") == 0, "Insert value failed");
 
+    // arr->elements == [0x000101, 0x000102, 0x000100, NULL]
+    // 0x000102 == "VALUE-3"
+    // arr->capacity == 4
+    // arr->count == 3
     arr_insert(arr, "VALUE-3", 1);
 
     mu_assert(arr->capacity == 4, "Resize array on insert failed");
@@ -53,6 +66,7 @@ char *day_2_array_tests()
     mu_assert(strcmp(arr_read(arr, 1), "VALUE-3") == 0, "Insert value failed");
     mu_assert(strcmp(arr_read(arr, 2), "VALUE-1") == 0, "Insert value failed");
 
+    // ????
     arr_remove(arr, "VALUE-3");
 
     mu_assert(arr->count == 2, "Remove count failed");
@@ -65,9 +79,6 @@ char *day_2_array_tests()
 
     return NULL;
 }
-
-
-
 
 char *all_tests()
 {
